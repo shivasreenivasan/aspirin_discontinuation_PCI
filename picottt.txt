@@ -1,0 +1,18 @@
+P	Patients post-PCI for ACS or STEMI on DAPT
+
+I 	Aspirin discontinued
+
+C 	DAPT continued
+
+O 	All-cause mortality
+	MI
+	? stent thrombosis
+	Stroke
+	Urgent revascularisation
+	Major or clinically relevant bleeding
+
+T 	Therapeutic
+
+T 	RCTs
+
+T 	No limitation

@@ -1,0 +1,13 @@
+(PCI OR "Percutaneous Coronary Intervention"[Mesh] OR angioplasty OR stent*)
+
+AND 
+
+(aspirin OR ticagrelor OR prasugrel OR clopidogrel OR monotherapy)
+
+AND
+
+(DAPT OR "Dual Anti-Platelet Therapy"[Mesh] OR "dual antiplatelet")
+
+AND 
+
+(""Acute Coronary Syndrome"[Mesh] OR STEMI OR "ST Elevation Myocardial Infarction"[Mesh] OR "myocardial infarction" OR MI)
