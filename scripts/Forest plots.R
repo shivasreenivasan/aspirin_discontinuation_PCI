@@ -498,7 +498,7 @@ grid.text(
 dev.off()
 
 
-#### Baujat plot ####
+#### Baujat plot for all cause mortality outcome ####
 
 pdf(
   here::here(
