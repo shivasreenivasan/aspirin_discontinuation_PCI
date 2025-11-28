@@ -4,3 +4,14 @@
 .httr-oauth
 .DS_Store
 .quarto
+
+# Ignore data folder
+data/
+
+# Ignore papers folder
+papers/
+
+# Keep these files/folders ignored if they're already there
+picottt.txt
+search_strategy.txt
+aspirin_discontinuation_PCI.Rproj
