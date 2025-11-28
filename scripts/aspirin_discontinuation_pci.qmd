@@ -1,10 +1,6 @@
 ---
 title: "aspirin_discontinuation_pci"
-<<<<<<< HEAD
 format: docx
-=======
-format: html
->>>>>>> cd2b821231abc5e852c1fb5284392d16a68808ad
 ---
 
 ## Quarto
