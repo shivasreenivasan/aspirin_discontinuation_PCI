@@ -451,8 +451,8 @@ forest(
   ff.lr = "bold",
   
   # Labels
-  label.left = "Favors short DAPT",
-  label.right = "Favors standard DAPT",
+  label.left = "\nFavors short DAPT",
+  label.right = "\nFavors standard DAPT",
   fs.lr = 9,
   
   # Spacing
@@ -498,3 +498,24 @@ grid.text(
 dev.off()
 
 
+#### Baujat plot ####
+
+pdf(
+  here::here(
+    "outputs",
+    "heterogeneity",
+    "data_aspirin_discontinuation_pci_acm_baujat.pdf"
+  ),
+  width = 11, height = 9
+)
+
+meta::baujat(
+  ma_acm,
+  bg="red",
+  cex.studlab = 0.8,
+  yscale = 10, 
+  xmin = 4, 
+  ymin = 1
+  )
+
+dev.off()
