@@ -10,4 +10,8 @@ AND
 
 AND 
 
-(""Acute Coronary Syndrome"[Mesh] OR STEMI OR "ST Elevation Myocardial Infarction"[Mesh] OR "myocardial infarction" OR MI)
+(Acute Coronary Syndrome"[Mesh] OR STEMI OR "ST Elevation Myocardial Infarction"[Mesh] OR "myocardial infarction" OR MI)
+
+AND 
+
+("randomized controlled trial"[PT] OR "controlled clinical trial"[Publication Type] OR "randomized"[Title/Abstract] OR "placebo"[Title/Abstract] OR "drug therapy"[MeSH Subheading] OR ("randomly"[Title/Abstract] OR "trial"[Title/Abstract] OR "groups"[Title/Abstract]))
