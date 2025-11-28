@@ -1,9 +1,9 @@
 ---
-title: "aspirin_discontinuation_pci"
+title: "Short-term vs. standard-term dual anti-platelet therapy after percutaneous coronary intervention in acute coronary syndromes: An updated systematic review and meta-analysis of randomized controlled trials"
 format: docx
 ---
 
-## Abstract
+# Abstract
 
 ## Introduction
 
