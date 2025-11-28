@@ -1,8 +1,10 @@
+PubMed
+
 (PCI OR "Percutaneous Coronary Intervention"[Mesh] OR angioplasty OR stent*)
 
 AND 
 
-(aspirin OR ticagrelor OR prasugrel OR clopidogrel OR monotherapy)
+(aspirin OR ticagrelor OR prasugrel OR clopidogrel OR monotherapy OR P2Y12)
 
 AND
 
@@ -10,8 +12,31 @@ AND
 
 AND 
 
-(Acute Coronary Syndrome"[Mesh] OR STEMI OR "ST Elevation Myocardial Infarction"[Mesh] OR "myocardial infarction" OR MI)
+("Acute Coronary Syndrome"[Mesh] OR STEMI OR "ST Elevation Myocardial Infarction"[Mesh] OR "myocardial infarction" OR MI)
 
 AND 
 
 ("randomized controlled trial"[PT] OR "controlled clinical trial"[Publication Type] OR "randomized"[Title/Abstract] OR "placebo"[Title/Abstract] OR "drug therapy"[MeSH Subheading] OR ("randomly"[Title/Abstract] OR "trial"[Title/Abstract] OR "groups"[Title/Abstract]))
+
+
+
+
+Embase
+
+(PCI OR "Percutaneous Coronary Intervention" OR angioplasty OR stent*)
+
+AND
+
+(aspirin OR ticagrelor OR prasugrel OR clopidogrel OR monotherapy OR P2Y12)
+
+AND
+
+(DAPT OR "Dual Anti-Platelet Therapy" OR "dual antiplatelet")
+
+AND
+
+("Acute Coronary Syndrome" OR STEMI OR "ST Elevation Myocardial Infarction" OR "myocardial infarction" OR MI)
+
+AND 
+
+("randomized controlled trial" OR "controlled clinical trial" OR "randomized" OR "placebo" OR "drug therapy" OR ("randomly" OR "trial" OR "groups"))

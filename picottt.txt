@@ -1,12 +1,13 @@
 P	Patients post-PCI for ACS or STEMI on DAPT
 
-I 	Aspirin discontinued
+I 	Aspirin discontinued within 1 - 3 months
 
 C 	DAPT continued
 
 O 	All-cause mortality
+	Major or clinically relevant bleeding
 	MI
-	? stent thrombosis
+	Stent thrombosis
 	Stroke
 	Urgent revascularisation
 	Major or clinically relevant bleeding
