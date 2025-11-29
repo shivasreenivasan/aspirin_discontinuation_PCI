@@ -1,7 +1,7 @@
 ---
 title: "Bayesian Meta-Analysis of Catheter Ablation vs Medical Therapy with {bayesmeta}"
 format:
-  html:
+  typst:
     toc: true
     toc-depth: 3
 execute:
@@ -13,7 +13,8 @@ execute:
 #| label: setup
 #| include: true
 
-# Load packages ----
+# Load packages
+
 pacman::p_load(
   tidyverse,
   bayesmeta,
