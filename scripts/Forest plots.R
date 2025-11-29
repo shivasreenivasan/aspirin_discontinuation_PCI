@@ -488,13 +488,25 @@ summary(ma_acm)
 
 
 # Funnel plot
+pdf(
+  here::here(
+    "outputs",
+    "heterogeneity",
+    "data_aspirin_discontinuation_pci_funnel_plot_acm.pdf"
+  ),
+  width = 12, height = 10
+)
 
 funnel(ma_acm)
+
+dev.off()
+
+# Eggers' test
 
 eggers.test(ma_acm)
 
 
-#### Leave one out sensitivity analysis
+#### Leave one out sensitivity analysis ####
 
 loo_acm <- ma_acm |> metainf(pooled = "random")
 
@@ -591,10 +603,10 @@ grid.rect(
 grid.text(
   glue::glue(
     "Sensitivity Analysis Summary:\n",
-    "  {rr_range_text}\n",
-    "  {i2_range_text}\n",
-    "  Most influential: {most_influential}\n",
-    "  Method: MH-REML with HKSJ adjustment"
+    "   - {rr_range_text}\n",
+    "   - {i2_range_text}\n",
+    "   - Most influential: {most_influential}\n",
+    "   - Method: MH-REML with HKSJ adjustment"
   ),
   x = 0.14, y = 0.075,
   just = c("left", "bottom"),
