@@ -9,6 +9,12 @@
 # Ignore papers folder
 papers/
 
+data/
+
+outputs/
+
+scripts/
+
 # Keep these files/folders ignored if they're already there
 picottt.txt
 search_strategy.txt
