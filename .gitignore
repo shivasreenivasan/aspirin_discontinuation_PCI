@@ -6,16 +6,10 @@
 .quarto
 
 
-# Ignore papers folder
+# Ignore folders
 papers/
-
-# Ignore data folder
 data/
-
-# Ignore outputs folder
 outputs/
-
-# Ignore scripts folder
 scripts/
 
 # Keep these files/folders ignored if they're already there
