@@ -57,7 +57,7 @@ ma_acm <- metabin(
   method.I2         = "tau2",
   sm                = "RR",
   method.random.ci  = "HK",
-  studlab           = glue::glue("{author} {year}"),
+  studlab           = glue::glue("{trial_name} {year}"),
 
   # Add these for better documentation and output:
   title             = outcome_acm, # Documents the outcome
@@ -86,7 +86,7 @@ forest(
   ma_acm,
   title = outcome_acm,
   layout = "RevMan5",
-  sortvar = TE,
+#  sortvar = TE,
 
   # Labels
   label.e = "Short DAPT",
@@ -174,7 +174,7 @@ ma_mb <- metabin(
   method.I2         = "tau2",
   sm                = "RR",
   method.random.ci  = "HK",
-  studlab           = glue::glue("{author} {year}"),
+  studlab           = glue::glue("{trial_name} {year}"),
   title = outcome_mb
 )
 
@@ -194,7 +194,7 @@ pdf(
 forest(
   ma_mb,
   layout = "RevMan5",
-  sortvar = TE,
+#  sortvar = TE,
 
   # Labels
   label.e = "Short DAPT",
@@ -282,7 +282,7 @@ ma_mi <- metabin(
   method.I2         = "tau2",
   sm                = "RR",
   method.random.ci  = "HK",
-  studlab           = glue::glue("{author} {year}"),
+  studlab           = glue::glue("{trial_name} {year}"),
   title             = outcome_mi 
 )
 
@@ -374,9 +374,115 @@ grid.text(outcome_mi,
 dev.off()
 
 
+#### Meta analysis of stroke ####
+
+outcome_stroke <- "Stroke"
+
+ma_stroke <- metabin(
+  event.e, 
+  n.e, 
+  event.c, 
+  n.c,
+  data              = ma$mi,
+  method            = "MH",
+  method.tau        = "REML",
+  method.I2         = "tau2",
+  sm                = "RR",
+  method.random.ci  = "HK",
+  studlab           = glue::glue("{trial_name} {year}"),
+  title             = outcome_stroke 
+)
+
+summary(ma_stroke)
+
+pdf(
+  here::here(
+    "outputs",
+    "forest_plots",
+    "data_aspirin_discontinuation_pci_stroke.pdf"
+  ),
+  width = 12,
+  height = 10
+)
+
+meta::forest(
+  ma_stroke,
+  layout = "RevMan5",
+  #  sortvar = TE,
+  
+  # Labels
+  label.e = "Short DAPT",
+  label.c = "Standard DAPT",
+  label.left = "Favours short DAPT",
+  label.right = "Favours standard DAPT",
+  col.label.left = "grey30",
+  col.label.right = "grey30",
+  bottom.lr = TRUE,
+  fs.lr = 10,
+  
+  # Outcome label
+  #  smlab                 = outcome,
+  
+  # Only show random-effects model
+  random = TRUE,
+  common = FALSE,
+  test.overall.random = TRUE,
+  text.random = "Pooled (random effects, 95% CI)",
+  
+  # Columns
+  leftcols = c("studlab", "event.e", "n.e", "event.c", "n.c", "w.random", "effect", "ci"),
+  leftlabs = c("Study", "Events", "N", "Events", "N", "Weight (%)", "RR", "95% CI"),
+  rightcols = FALSE,
+  
+  # Plot style
+  col.square = "blue",
+  col.square.lines = "black",
+  col.predict = "red",
+  col.predict.lines = "black",
+  colgap = "3mm",
+  colgap.left = "3mm",
+  colgap.forest.left = "5mm",
+  just.studlab = "left",
+  
+  # Prediction interval
+  prediction = TRUE,
+  text.predict = "Prediction interval",
+  
+  # Font sizes and face
+  fontsize = 11,
+  fs.study = 11,
+  fs.heading = 10,
+  fs.hetstat = 10,
+  fs.predict = 11,
+  fs.axis = 10,
+  fs.xlab = 12,
+  ff.study = "plain",
+  ff.random = "bold",
+  ff.hetstat = "italic",
+  ff.axis = "plain",
+  ff.lr = "bold",
+  ff.heading = "bold",
+  
+  # Optional pooled stats
+  pooled.events = TRUE,
+  pooled.totals = TRUE,
+  
+  # Spacing
+  addrows.below.overall = 2
+)
+
+grid.text(outcome_stroke,
+          x = 0.05, # Left side (0 = far left, 1 = far right)
+          y = 0.75, # Top (0 = bottom, 1 = top)
+          just = "left", # Left-justify the text
+          gp = gpar(fontsize = 14, fontface = "bold")
+)
+
+dev.off()
 
 
-# Heterogeneity stats
+
+#### Heterogeneity stats ####
 
 summary(ma_acm)
 

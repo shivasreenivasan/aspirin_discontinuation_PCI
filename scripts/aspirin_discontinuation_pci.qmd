@@ -11,6 +11,6 @@ The optimal intensity and duration of antiplatelet therapy following percutaneou
 
 ## Methods
 
-MEDLINE/PubMed, Embase, and the Cochrane Central Register of Controlled Trials were systematically searched for studies comparing abbreviated DAPT (1–3 months) followed by P2Y12 inhibitor monotherapy with a standard 12-month DAPT regimen in patients undergoing PCI for ACS. The search encompassed all records from database inception to November 2025. Outcomes of interest included all-cause mortality, major or clinically significant bleeding, cardiovascular mortality, myocardial infarction, stent thrombosis, target vessel revascularization, and stroke.
+PubMed, Embase, Scopus, and the Cochrane Central Register of Controlled Trials were systematically searched for studies comparing abbreviated DAPT (1–3 months) followed by P2Y12 inhibitor monotherapy with a standard 12-month DAPT regimen in patients undergoing PCI for ACS. The search encompassed all records from database inception to November 2025. Outcomes of interest included all-cause mortality, major or clinically significant bleeding, cardiovascular mortality, myocardial infarction, stent thrombosis, target vessel revascularization, and stroke.
 
 
