@@ -383,7 +383,7 @@ ma_stroke <- metabin(
   n.e, 
   event.c, 
   n.c,
-  data              = ma$mi,
+  data              = ma$stroke,
   method            = "MH",
   method.tau        = "REML",
   method.I2         = "tau2",
