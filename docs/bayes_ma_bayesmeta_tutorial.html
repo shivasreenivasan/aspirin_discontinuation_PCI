@@ -135,7 +135,7 @@ window.Quarto = {
   <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">Data preparation</a>
   <ul class="collapse">
   <li><a href="#trials-and-event-counts" id="toc-trials-and-event-counts" class="nav-link" data-scroll-target="#trials-and-event-counts">Trials and event counts</a></li>
-  <li><a href="#from-22-tables-to-effect-sizes" id="toc-from-22-tables-to-effect-sizes" class="nav-link" data-scroll-target="#from-22-tables-to-effect-sizes">From 2×2 tables to effect sizes</a></li>
+  <li><a href="#from-2-2-tables-to-effect-sizes" id="toc-from-2-2-tables-to-effect-sizes" class="nav-link" data-scroll-target="#from-2-2-tables-to-effect-sizes">From 2 × 2 tables to effect sizes</a></li>
   </ul></li>
   <li><a href="#bayesian-meta-analysis-with-different-tau-priors" id="toc-bayesian-meta-analysis-with-different-tau-priors" class="nav-link" data-scroll-target="#bayesian-meta-analysis-with-different-tau-priors">Bayesian meta-analysis with different <span class="math inline">\(\tau\)</span> priors</a>
   <ul class="collapse">
@@ -143,7 +143,7 @@ window.Quarto = {
   <li><a href="#summarise-all-three-models" id="toc-summarise-all-three-models" class="nav-link" data-scroll-target="#summarise-all-three-models">Summarise all three models</a></li>
   </ul></li>
   <li><a href="#forest-plot-with-bayesian-shrinkage" id="toc-forest-plot-with-bayesian-shrinkage" class="nav-link" data-scroll-target="#forest-plot-with-bayesian-shrinkage">Forest plot with Bayesian shrinkage</a></li>
-  <li><a href="#posterior-distributions-for-μ-and-τ" id="toc-posterior-distributions-for-μ-and-τ" class="nav-link" data-scroll-target="#posterior-distributions-for-μ-and-τ">Posterior distributions for μ and τ</a></li>
+  <li><a href="#posterior-distributions-for-mu-and-tau" id="toc-posterior-distributions-for-mu-and-tau" class="nav-link" data-scroll-target="#posterior-distributions-for-mu-and-tau">Posterior distributions for <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\tau\)</span></a></li>
   <li><a href="#funnel-plot-publication-bias-check" id="toc-funnel-plot-publication-bias-check" class="nav-link" data-scroll-target="#funnel-plot-publication-bias-check">Funnel plot (publication bias check)</a></li>
   <li><a href="#baujat-plot-influence-and-heterogeneity" id="toc-baujat-plot-influence-and-heterogeneity" class="nav-link" data-scroll-target="#baujat-plot-influence-and-heterogeneity">Baujat plot: influence and heterogeneity</a></li>
   <li><a href="#cabana-trial-using-meta-analysis-as-an-informative-prior" id="toc-cabana-trial-using-meta-analysis-as-an-informative-prior" class="nav-link" data-scroll-target="#cabana-trial-using-meta-analysis-as-an-informative-prior">CABANA trial: using meta-analysis as an informative prior</a>
@@ -154,7 +154,7 @@ window.Quarto = {
   <li><a href="#conjugate-normalnormal-updating" id="toc-conjugate-normalnormal-updating" class="nav-link" data-scroll-target="#conjugate-normalnormal-updating">Conjugate normal–normal updating</a></li>
   <li><a href="#visualising-prior-likelihood-and-posterior" id="toc-visualising-prior-likelihood-and-posterior" class="nav-link" data-scroll-target="#visualising-prior-likelihood-and-posterior">Visualising <em>prior</em>, <em>likelihood</em>, and <em>posterior</em></a></li>
   <li><a href="#prior-sensitivity-for-cabana" id="toc-prior-sensitivity-for-cabana" class="nav-link" data-scroll-target="#prior-sensitivity-for-cabana">Prior sensitivity for CABANA</a></li>
-  <li><a href="#prior-sensitivity-for-τ-in-the-meta-analysis" id="toc-prior-sensitivity-for-τ-in-the-meta-analysis" class="nav-link" data-scroll-target="#prior-sensitivity-for-τ-in-the-meta-analysis">Prior sensitivity for τ in the meta-analysis</a></li>
+  <li><a href="#prior-sensitivity-for-in-the-meta-analysis" id="toc-prior-sensitivity-for-in-the-meta-analysis" class="nav-link" data-scroll-target="#prior-sensitivity-for-in-the-meta-analysis">Prior sensitivity for in the meta-analysis</a></li>
   <li><a href="#take-home-messages" id="toc-take-home-messages" class="nav-link" data-scroll-target="#take-home-messages">Take-home messages</a></li>
   </ul>
 </nav>
@@ -183,23 +183,25 @@ window.Quarto = {
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  tidyverse,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  bayesmeta,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  metafor,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  cowplot,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  scales,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  patchwork,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  glue</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed for reproducibility</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(pacman)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  tidyverse,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  bayesmeta,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  metafor,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  cowplot,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  scales,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  patchwork,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  glue</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed for reproducibility</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="clinical-question-and-overview" class="level1">
 <h1>Clinical question and overview</h1>
 <p>In atrial fibrillation, catheter ablation (CA) is widely used to improve symptoms and quality of life. But does it also reduce hard outcomes such as all-cause mortality when compared with medical therapy (MT)?</p>
-<p>The CABANA trial was designed and analysed using frequentist methods and did not show a “statistically significant” mortality benefit for CA. However, a recent Bayesian re-analysis of CABANA<span class="citation" data-cites="Nogueira_et_al_2025"><sup><a href="#ref-Nogueira_et_al_2025" role="doc-biblioref">1</a></sup></span> and four similar trials suggested a high probability that CA improves survival.</p>
+<p>The CABANA trial<span class="citation" data-cites="cabana_packer_2019"><sup><a href="#ref-cabana_packer_2019" role="doc-biblioref">1</a></sup></span> was designed and analysed using frequentist methods and did not show a “statistically significant” mortality benefit for CA. However, a recent Bayesian re-analysis of CABANA<span class="citation" data-cites="Nogueira_et_al_2025"><sup><a href="#ref-Nogueira_et_al_2025" role="doc-biblioref">2</a></sup></span> and four similar trials<span class="citation" data-cites="stabile_2006 a4_jais_2008 thermocool_af_2010 mantra-af_2012"><sup><a href="#ref-stabile_2006" role="doc-biblioref">3</a>–<a href="#ref-mantra-af_2012" role="doc-biblioref">6</a></sup></span> suggested a high probability that CA improves survival.</p>
 <p>In this tutorial you will:</p>
 <ul>
 <li><p>Build a simple Bayesian random-effects meta-analysis using the <code>{bayesmeta}</code> package.</p></li>
@@ -213,21 +215,21 @@ window.Quarto = {
 <h1>Data preparation</h1>
 <section id="trials-and-event-counts" class="level2">
 <h2 class="anchored" data-anchor-id="trials-and-event-counts">Trials and event counts</h2>
-<p>We analyse four randomized trials comparing CA vs MT on all-cause mortality:</p>
+<p>We analyse four randomized trials comparing CA vs MT on <strong>all-cause mortality</strong>:</p>
 <ul>
-<li><p>A4</p></li>
-<li><p>MANTRA-PAF</p></li>
-<li><p>Stabile 2006 (Catheter Ablation for the Cure of AF Study)</p></li>
-<li><p>ThermoCool AF</p></li>
+<li><p>A4<span class="citation" data-cites="a4_jais_2008"><sup><a href="#ref-a4_jais_2008" role="doc-biblioref">4</a></sup></span></p></li>
+<li><p>MANTRA-PAF<span class="citation" data-cites="mantra-af_2012"><sup><a href="#ref-mantra-af_2012" role="doc-biblioref">6</a></sup></span></p></li>
+<li><p>Stabile 2006 (Catheter Ablation for the Cure of AF Study)<span class="citation" data-cites="stabile_2006"><sup><a href="#ref-stabile_2006" role="doc-biblioref">3</a></sup></span></p></li>
+<li><p>ThermoCool AF<span class="citation" data-cites="thermocool_af_2010"><sup><a href="#ref-thermocool_af_2010" role="doc-biblioref">5</a></sup></span></p></li>
 </ul>
 <p>For each trial we need:</p>
 <ul>
-<li><p>deaths in CA group (e_ca),</p></li>
+<li><p>deaths (events) in CA group (e_ca),</p></li>
 <li><p>total in CA group (n_ca),</p></li>
-<li><p>deaths in MT group (e_mt),</p></li>
+<li><p>deaths (events) in MT group (e_mt),</p></li>
 <li><p>total in MT group (n_mt).</p></li>
 </ul>
-<p>These are taken from Table 1 in the original paper<span class="citation" data-cites="Nogueira_et_al_2025"><sup><a href="#ref-Nogueira_et_al_2025" role="doc-biblioref">1</a></sup></span> .</p>
+<p>These are taken from Table 1 in the original paper<span class="citation" data-cites="Nogueira_et_al_2025"><sup><a href="#ref-Nogueira_et_al_2025" role="doc-biblioref">2</a></sup></span> .</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df_meta <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">study =</span> <span class="fu">c</span>(<span class="st">"A4"</span>, <span class="st">"MANTRA-PAF"</span>, <span class="st">"Stabile 2006"</span>, <span class="st">"ThermoCool AF"</span>),</span>
@@ -301,8 +303,8 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="from-22-tables-to-effect-sizes" class="level2">
-<h2 class="anchored" data-anchor-id="from-22-tables-to-effect-sizes">From 2×2 tables to effect sizes</h2>
+<section id="from-2-2-tables-to-effect-sizes" class="level2">
+<h2 class="anchored" data-anchor-id="from-2-2-tables-to-effect-sizes">From 2 × 2 tables to effect sizes</h2>
 <p>We use the log odds ratio (log-OR) as the effect size. Values:</p>
 <blockquote class="blockquote">
 <p>log-OR &lt; 0 → OR &lt; 1 → favours CA (lower odds of death)</p>
@@ -385,19 +387,15 @@ window.Quarto = {
 <h1>Bayesian meta-analysis with different <span class="math inline">\(\tau\)</span> priors</h1>
 <p>We fit Bayesian random-effects meta-analysis models with <code>{bayesmeta}</code>.</p>
 <p>Key parameters:</p>
-<blockquote class="blockquote">
-<p><strong>μ (mu)</strong>: overall mean log-OR (pooled treatment effect).</p>
-</blockquote>
-<blockquote class="blockquote">
-<p><strong>τ (tau)</strong>: between-study standard deviation (heterogeneity).</p>
-</blockquote>
+<ul>
+<li><p><strong>μ (mu)</strong>: overall mean log-OR (pooled treatment effect).</p></li>
+<li><p><strong>τ (tau)</strong>: between-study standard deviation (heterogeneity).</p></li>
+</ul>
 <p>We assume:</p>
-<blockquote class="blockquote">
-<p><strong>Likelihood</strong>: each study’s log-OR <span class="math inline">\(y_i \sim N(\theta_i, \sigma_i^2)\)</span></p>
-</blockquote>
-<blockquote class="blockquote">
-<p><strong>Study-specific effects</strong>: <span class="math inline">\(\theta_i \sim N(\mu, \tau^2)\)</span></p>
-</blockquote>
+<ul>
+<li><p><strong>Likelihood</strong>: each study’s log-OR <span class="math inline">\(y_i \sim N(\theta_i, \sigma_i^2)\)</span></p></li>
+<li><p><strong>Study-specific effects</strong>: <span class="math inline">\(\theta_i \sim N(\mu, \tau^2)\)</span></p></li>
+</ul>
 <p>We fit three models that differ only in the prior for τ:</p>
 <ol type="1">
 <li><p><strong>Half-Normal(0, 0.5)</strong> — weakly informative, commonly recommended for log-ORs.</p></li>
@@ -460,6 +458,9 @@ Important
 <div class="callout-body-container callout-body">
 <p>We must index as <code>summary["mean", "mu"]</code> (statistic first, parameter second).</p>
 </div>
+</div>
+<div class="line-block"><br>
+<br>
 </div>
 <p>We also obtain <span class="math inline">\(P(\mu &lt; 0)\)</span> directly via <code>pposterior(mu = 0)</code>.</p>
 <div class="cell">
@@ -715,8 +716,8 @@ Important
 </div>
 </div>
 </section>
-<section id="posterior-distributions-for-μ-and-τ" class="level1">
-<h1>Posterior distributions for μ and τ</h1>
+<section id="posterior-distributions-for-mu-and-tau" class="level1">
+<h1>Posterior distributions for <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\tau\)</span></h1>
 <p>We now examine the full posterior distributions of:</p>
 <ul>
 <li><p><strong>μ</strong> (overall log-OR) → transformed to OR</p></li>
@@ -960,12 +961,10 @@ Important
 <section id="cabana-mortality-data-22-table" class="level2">
 <h2 class="anchored" data-anchor-id="cabana-mortality-data-22-table">CABANA mortality data (2×2 table)</h2>
 <p>CABANA all-cause mortality counts:</p>
-<blockquote class="blockquote">
-<p>CA: 58 deaths / 1108</p>
-</blockquote>
-<blockquote class="blockquote">
-<p>MT: 67 deaths / 1096</p>
-</blockquote>
+<ul>
+<li><p>CA: 58 deaths / 1108</p></li>
+<li><p>MT: 67 deaths / 1096</p></li>
+</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>cabana_2_2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
@@ -999,10 +998,29 @@ group death survive
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">log_or =</span> log_or_cabana,</span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">se     =</span> se_cabana,</span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">OR     =</span> <span class="fu">exp</span>(log_or_cabana)</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    log_or         se         OR 
--0.1644523  0.1846373  0.8483582 </code></pre>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> pander<span class="sc">::</span><span class="fu">pander</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">log_or</th>
+<th style="text-align: center;">se</th>
+<th style="text-align: center;">OR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">-0.1645</td>
+<td style="text-align: center;">0.1846</td>
+<td style="text-align: center;">0.8484</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </section>
@@ -1011,71 +1029,71 @@ group death survive
 <h1>Conjugate normal–normal updating</h1>
 <p>On the log-OR scale, we approximate:</p>
 <ul>
-<li><p><strong>Prior</strong> from <em>meta-analysis</em>: <span class="math inline">\(μ ~ N(μ₀, σ₀²)\)</span></p></li>
-<li><p><strong>Likelihood</strong> from <em>CABANA</em> (Wald approximation): <span class="math inline">\(μ | data ~ N(ŷ, s²)\)</span></p></li>
+<li><p><strong>Prior</strong> from <em>meta-analysis</em>: <span class="math inline">\(\mu \sim N(\mu_o, \sigma_o^2)\)</span></p></li>
+<li><p><strong>Likelihood</strong> from <em>CABANA</em> (Wald approximation): <span class="math inline">\(\mu | data ~ N(\hat{y}, s^2)\)</span></p></li>
 </ul>
 <p>Then:</p>
 <ul>
-<li><p>Posterior precision: 1/σ² = 1/σ₀² + 1/s²</p></li>
-<li><p>Posterior mean: μ* = (μ₀/σ₀² + ŷ/s²) / (1/σ₀² + 1/s²)</p></li>
+<li><p>Posterior precision: <span class="math inline">\(\frac{1}{\sigma^2} = \frac{1}{\sigma_0^2} + \frac{1}{s^2}\)</span></p></li>
+<li><p>Posterior mean: <span class="math inline">\(\mu^* = \frac{\frac{\mu_0}{\sigma_0^2} + \frac{\hat{y}}{s^2}}{\frac{1}{\sigma_0^2} + \frac{1}{s^2}}\)</span></p></li>
 </ul>
 <p>We also contrast this <strong>informative prior</strong> with a practically <strong>non-informative prior</strong> (very large variance).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prior from meta-analysis (half-normal τ model)</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> results_halfnormal<span class="sc">$</span>mu_mean[[<span class="dv">1</span>]]</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>prior_sd <span class="ot">&lt;-</span> results_halfnormal<span class="sc">$</span>mu_sd[[<span class="dv">1</span>]]</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>prior_prec <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> prior_sd<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Likelihood from CABANA</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>lik_mean <span class="ot">&lt;-</span> log_or_cabana</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>lik_sd <span class="ot">&lt;-</span> se_cabana</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>lik_prec <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> lik_sd<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Posterior with informative prior</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>post_prec <span class="ot">&lt;-</span> prior_prec <span class="sc">+</span> lik_prec</span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>post_sd <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">/</span> post_prec)</span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>post_mean <span class="ot">&lt;-</span> (prior_prec <span class="sc">*</span> prior_mean <span class="sc">+</span> lik_prec <span class="sc">*</span> lik_mean) <span class="sc">/</span> post_prec</span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Posterior with effectively non-informative prior (very large SD)</span></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>ni_prior_sd <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>ni_prior_prec <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> ni_prior_sd<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>post_ni_prec <span class="ot">&lt;-</span> ni_prior_prec <span class="sc">+</span> lik_prec</span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>post_ni_sd <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">/</span> post_ni_prec)</span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>post_ni_mean <span class="ot">&lt;-</span> (ni_prior_prec <span class="sc">*</span> <span class="dv">0</span> <span class="sc">+</span> lik_prec <span class="sc">*</span> lik_mean) <span class="sc">/</span> post_ni_prec</span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Probability of benefit: OR &lt; 1 ⇒ log-OR &lt; 0</span></span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>prob_benefit_ni <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="dv">0</span>, <span class="at">mean =</span> post_ni_mean, <span class="at">sd =</span> post_ni_sd)</span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>prob_benefit_inf <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="dv">0</span>, <span class="at">mean =</span> post_mean, <span class="at">sd =</span> post_sd)</span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>post_means <span class="ot">&lt;-</span> <span class="fu">c</span>(post_ni_mean, post_mean)</span>
-<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>post_sds <span class="ot">&lt;-</span> <span class="fu">c</span>(post_ni_sd, post_sd)</span>
-<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>post_OR <span class="ot">&lt;-</span> <span class="fu">exp</span>(post_means)</span>
-<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>lower_95 <span class="ot">&lt;-</span> <span class="fu">exp</span>(post_means <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> post_sds)</span>
-<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>upper_95 <span class="ot">&lt;-</span> <span class="fu">exp</span>(post_means <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> post_sds)</span>
-<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>prob_benefit <span class="ot">&lt;-</span> <span class="fu">c</span>(prob_benefit_ni, prob_benefit_inf)</span>
-<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
-<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">analysis      =</span> <span class="fu">c</span>(<span class="st">"Non-informative prior"</span>, <span class="st">"Informative prior (meta-analysis)"</span>),</span>
-<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">post_logOR    =</span> post_means,</span>
-<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">post_sd       =</span> post_sds,</span>
-<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">post_OR       =</span> post_OR,</span>
-<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower_95      =</span> lower_95,</span>
-<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper_95      =</span> upper_95,</span>
-<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">prob_benefit  =</span> prob_benefit</span>
-<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"post_"</span>), \(x) <span class="fu">round</span>(x, <span class="dv">3</span>)),</span>
-<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">prob_benefit =</span> <span class="fu">round</span>(prob_benefit, <span class="dv">1</span>)</span>
-<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
-<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"CABANA mortality: posterior summaries using non-informative vs informative priors."</span></span>
-<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prior from meta-analysis (half-normal τ model)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>prior_mean <span class="ot">&lt;-</span> results_halfnormal<span class="sc">$</span>mu_mean[[<span class="dv">1</span>]]</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>prior_sd <span class="ot">&lt;-</span> results_halfnormal<span class="sc">$</span>mu_sd[[<span class="dv">1</span>]]</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>prior_prec <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> prior_sd<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Likelihood from CABANA</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>lik_mean <span class="ot">&lt;-</span> log_or_cabana</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>lik_sd <span class="ot">&lt;-</span> se_cabana</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>lik_prec <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> lik_sd<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Posterior with informative prior</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>post_prec <span class="ot">&lt;-</span> prior_prec <span class="sc">+</span> lik_prec</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>post_sd <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">/</span> post_prec)</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>post_mean <span class="ot">&lt;-</span> (prior_prec <span class="sc">*</span> prior_mean <span class="sc">+</span> lik_prec <span class="sc">*</span> lik_mean) <span class="sc">/</span> post_prec</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Posterior with effectively non-informative prior (very large SD)</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>ni_prior_sd <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>ni_prior_prec <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> ni_prior_sd<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>post_ni_prec <span class="ot">&lt;-</span> ni_prior_prec <span class="sc">+</span> lik_prec</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>post_ni_sd <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">/</span> post_ni_prec)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>post_ni_mean <span class="ot">&lt;-</span> (ni_prior_prec <span class="sc">*</span> <span class="dv">0</span> <span class="sc">+</span> lik_prec <span class="sc">*</span> lik_mean) <span class="sc">/</span> post_ni_prec</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Probability of benefit: OR &lt; 1 ⇒ log-OR &lt; 0</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>prob_benefit_ni <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="dv">0</span>, <span class="at">mean =</span> post_ni_mean, <span class="at">sd =</span> post_ni_sd)</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>prob_benefit_inf <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="dv">0</span>, <span class="at">mean =</span> post_mean, <span class="at">sd =</span> post_sd)</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>post_means <span class="ot">&lt;-</span> <span class="fu">c</span>(post_ni_mean, post_mean)</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>post_sds <span class="ot">&lt;-</span> <span class="fu">c</span>(post_ni_sd, post_sd)</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>post_OR <span class="ot">&lt;-</span> <span class="fu">exp</span>(post_means)</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>lower_95 <span class="ot">&lt;-</span> <span class="fu">exp</span>(post_means <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> post_sds)</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>upper_95 <span class="ot">&lt;-</span> <span class="fu">exp</span>(post_means <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> post_sds)</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>prob_benefit <span class="ot">&lt;-</span> <span class="fu">c</span>(prob_benefit_ni, prob_benefit_inf)</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">analysis      =</span> <span class="fu">c</span>(<span class="st">"Non-informative prior"</span>, <span class="st">"Informative prior (meta-analysis)"</span>),</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">post_logOR    =</span> post_means,</span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">post_sd       =</span> post_sds,</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">post_OR       =</span> post_OR,</span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower_95      =</span> lower_95,</span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper_95      =</span> upper_95,</span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">prob_benefit  =</span> prob_benefit</span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"post_"</span>), \(x) <span class="fu">round</span>(x, <span class="dv">3</span>)),</span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">prob_benefit =</span> <span class="fu">round</span>(prob_benefit, <span class="dv">1</span>)</span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"CABANA mortality: posterior summaries using non-informative vs informative priors."</span></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>CABANA mortality: posterior summaries using non-informative vs informative priors.</caption>
@@ -1133,62 +1151,62 @@ group death survive
 </ul>
 <p>combine on the OR scale.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>or_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.3</span>, <span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">500</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>log_or_seq <span class="ot">&lt;-</span> <span class="fu">log</span>(or_seq)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>density_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">or =</span> or_seq,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">log_or =</span> log_or_seq,</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">prior =</span> <span class="fu">dnorm</span>(log_or_seq, <span class="at">mean =</span> prior_mean, <span class="at">sd =</span> prior_sd),</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">likelihood =</span> <span class="fu">dnorm</span>(log_or_seq, <span class="at">mean =</span> lik_mean, <span class="at">sd =</span> lik_sd),</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">posterior =</span> <span class="fu">dnorm</span>(log_or_seq, <span class="at">mean =</span> post_mean, <span class="at">sd =</span> post_sd),</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">posterior_ni =</span> <span class="fu">dnorm</span>(log_or_seq, <span class="at">mean =</span> post_ni_mean, <span class="at">sd =</span> post_ni_sd)</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols      =</span> <span class="fu">c</span>(prior, likelihood, posterior, posterior_ni),</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to  =</span> <span class="st">"distribution"</span>,</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"density"</span></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">distribution =</span> <span class="fu">factor</span>(</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>      distribution,</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"prior"</span>, <span class="st">"likelihood"</span>, <span class="st">"posterior"</span>, <span class="st">"posterior_ni"</span>),</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Prior (Meta-analysis)"</span>,</span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Likelihood (CABANA)"</span>,</span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Posterior (Informative)"</span>,</span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Posterior (Non-informative)"</span></span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(density_data, <span class="fu">aes</span>(<span class="at">x =</span> or, <span class="at">y =</span> density, <span class="at">colour =</span> distribution)) <span class="sc">+</span></span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.2</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"gray50"</span>) <span class="sc">+</span></span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">0.4</span>, <span class="fl">1.6</span>)) <span class="sc">+</span></span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
-<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Prior (Meta-analysis)"</span>       <span class="ot">=</span> <span class="st">"#56B4E9"</span>,</span>
-<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Likelihood (CABANA)"</span>         <span class="ot">=</span> <span class="st">"red"</span>,</span>
-<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Posterior (Informative)"</span>     <span class="ot">=</span> <span class="st">"#009E73"</span>,</span>
-<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Posterior (Non-informative)"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span></span>
-<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Bayesian Updating: Meta-analysis Prior × CABANA Likelihood"</span>,</span>
-<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Log-OR for all-cause mortality: CA vs MT"</span>,</span>
-<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Odds Ratio"</span>,</span>
-<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Density"</span>,</span>
-<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"Distribution"</span></span>
-<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_cowplot</span>() <span class="sc">+</span></span>
-<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">13</span>),</span>
-<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">colour =</span> <span class="st">"gray40"</span>),</span>
-<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
-<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>)</span>
-<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>or_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.3</span>, <span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">500</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>log_or_seq <span class="ot">&lt;-</span> <span class="fu">log</span>(or_seq)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>density_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">or =</span> or_seq,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">log_or =</span> log_or_seq,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">prior =</span> <span class="fu">dnorm</span>(log_or_seq, <span class="at">mean =</span> prior_mean, <span class="at">sd =</span> prior_sd),</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">likelihood =</span> <span class="fu">dnorm</span>(log_or_seq, <span class="at">mean =</span> lik_mean, <span class="at">sd =</span> lik_sd),</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">posterior =</span> <span class="fu">dnorm</span>(log_or_seq, <span class="at">mean =</span> post_mean, <span class="at">sd =</span> post_sd),</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">posterior_ni =</span> <span class="fu">dnorm</span>(log_or_seq, <span class="at">mean =</span> post_ni_mean, <span class="at">sd =</span> post_ni_sd)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols      =</span> <span class="fu">c</span>(prior, likelihood, posterior, posterior_ni),</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to  =</span> <span class="st">"distribution"</span>,</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"density"</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">distribution =</span> <span class="fu">factor</span>(</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>      distribution,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"prior"</span>, <span class="st">"likelihood"</span>, <span class="st">"posterior"</span>, <span class="st">"posterior_ni"</span>),</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Prior (Meta-analysis)"</span>,</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Likelihood (CABANA)"</span>,</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Posterior (Informative)"</span>,</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Posterior (Non-informative)"</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(density_data, <span class="fu">aes</span>(<span class="at">x =</span> or, <span class="at">y =</span> density, <span class="at">colour =</span> distribution)) <span class="sc">+</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.2</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"gray50"</span>) <span class="sc">+</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">0.4</span>, <span class="fl">1.6</span>)) <span class="sc">+</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Prior (Meta-analysis)"</span>       <span class="ot">=</span> <span class="st">"#56B4E9"</span>,</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Likelihood (CABANA)"</span>         <span class="ot">=</span> <span class="st">"red"</span>,</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Posterior (Informative)"</span>     <span class="ot">=</span> <span class="st">"#009E73"</span>,</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Posterior (Non-informative)"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Bayesian Updating: Meta-analysis Prior × CABANA Likelihood"</span>,</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Log-OR for all-cause mortality: CA vs MT"</span>,</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Odds Ratio"</span>,</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Density"</span>,</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"Distribution"</span></span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_cowplot</span>() <span class="sc">+</span></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">13</span>),</span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">colour =</span> <span class="st">"gray40"</span>),</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>)</span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1196,6 +1214,8 @@ group death survive
 </figure>
 </div>
 </div>
+</div>
+<div class="line-block"><br>
 </div>
 </section>
 <section id="prior-sensitivity-for-cabana" class="level1">
@@ -1207,137 +1227,137 @@ group death survive
 <li><p>Informative prior based on the meta-analysis</p></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>n_samples_viz <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>comparison_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">log_or_inform  =</span> <span class="fu">rnorm</span>(n_samples_viz, post_mean, post_sd),</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">log_or_noninfo =</span> <span class="fu">rnorm</span>(n_samples_viz, post_ni_mean, post_ni_sd)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">or_inform  =</span> <span class="fu">exp</span>(log_or_inform),</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">or_noninfo =</span> <span class="fu">exp</span>(log_or_noninfo)</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>pdf_comparison <span class="ot">&lt;-</span> comparison_data <span class="sc">|&gt;</span></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols      =</span> <span class="fu">c</span>(or_inform, or_noninfo),</span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to  =</span> <span class="st">"prior_type"</span>,</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"or"</span></span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior_type =</span> <span class="fu">factor</span>(</span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>      prior_type,</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"or_noninfo"</span>, <span class="st">"or_inform"</span>),</span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Non-informative Prior"</span>, <span class="st">"Informative Prior (Meta-analysis)"</span>)</span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> or, <span class="at">fill =</span> prior_type, <span class="at">colour =</span> prior_type)) <span class="sc">+</span></span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"gray50"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
-<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
-<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Non-informative Prior"</span> <span class="ot">=</span> <span class="st">"#E69F00"</span>,</span>
-<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Informative Prior (Meta-analysis)"</span> <span class="ot">=</span> <span class="st">"#56B4E9"</span></span>
-<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
-<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Non-informative Prior"</span> <span class="ot">=</span> <span class="st">"#E69F00"</span>,</span>
-<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Informative Prior (Meta-analysis)"</span> <span class="ot">=</span> <span class="st">"#56B4E9"</span></span>
-<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">1.5</span>)) <span class="sc">+</span></span>
-<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"CABANA Mortality: Prior Sensitivity"</span>,</span>
-<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">glue</span>(</span>
-<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Non-informative: OR = {round(exp(post_ni_mean), 2)} | "</span>,</span>
-<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Informative: OR = {round(exp(post_mean), 2)}"</span></span>
-<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Odds Ratio"</span>,</span>
-<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Posterior Density"</span>,</span>
-<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Analysis"</span>,</span>
-<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"Analysis"</span></span>
-<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
-<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
-<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">1.3</span>, <span class="at">y =</span> <span class="cn">Inf</span>, <span class="at">vjust =</span> <span class="dv">2</span>,</span>
-<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">glue</span>(</span>
-<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a>      <span class="st">"P(benefit | informative) = {round(prob_benefit_inf, 1)}%</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a>      <span class="st">"P(benefit | non-informative) = {round(prob_benefit_ni, 1)}%"</span></span>
-<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.5</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>, <span class="at">lineheight =</span> <span class="fl">0.9</span></span>
-<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_cowplot</span>() <span class="sc">+</span></span>
-<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">13</span>),</span>
-<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">colour =</span> <span class="st">"gray40"</span>),</span>
-<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
-<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>)</span>
-<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a>cdf_comparison <span class="ot">&lt;-</span> comparison_data <span class="sc">|&gt;</span></span>
-<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols      =</span> <span class="fu">c</span>(or_inform, or_noninfo),</span>
-<span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to  =</span> <span class="st">"prior_type"</span>,</span>
-<span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"or"</span></span>
-<span id="cb17-75"><a href="#cb17-75" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb17-76"><a href="#cb17-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior_type =</span> <span class="fu">factor</span>(</span>
-<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a>      prior_type,</span>
-<span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"or_noninfo"</span>, <span class="st">"or_inform"</span>),</span>
-<span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Non-informative"</span>, <span class="st">"Informative"</span>)</span>
-<span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(prior_type) <span class="sc">|&gt;</span></span>
-<span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(or, <span class="at">.by_group =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb17-85"><a href="#cb17-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cdf =</span> <span class="fu">row_number</span>() <span class="sc">/</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb17-86"><a href="#cb17-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb17-87"><a href="#cb17-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> or, <span class="at">y =</span> cdf, <span class="at">colour =</span> prior_type)) <span class="sc">+</span></span>
-<span id="cb17-88"><a href="#cb17-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"gray50"</span>) <span class="sc">+</span></span>
-<span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb17-91"><a href="#cb17-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Non-informative"</span> <span class="ot">=</span> <span class="st">"#E69F00"</span>, <span class="st">"Informative"</span> <span class="ot">=</span> <span class="st">"#56B4E9"</span>)</span>
-<span id="cb17-92"><a href="#cb17-92" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.1</span>),</span>
-<span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> percent</span>
-<span id="cb17-96"><a href="#cb17-96" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb17-97"><a href="#cb17-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">1.5</span>)) <span class="sc">+</span></span>
-<span id="cb17-98"><a href="#cb17-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb17-99"><a href="#cb17-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Cumulative Distribution Functions"</span>,</span>
-<span id="cb17-100"><a href="#cb17-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Probability that OR is less than any given value"</span>,</span>
-<span id="cb17-101"><a href="#cb17-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Odds Ratio"</span>,</span>
-<span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Cumulative Probability"</span>,</span>
-<span id="cb17-103"><a href="#cb17-103" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"Prior"</span></span>
-<span id="cb17-104"><a href="#cb17-104" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb17-105"><a href="#cb17-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
-<span id="cb17-106"><a href="#cb17-106" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
-<span id="cb17-107"><a href="#cb17-107" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">0.7</span>, <span class="at">y =</span> <span class="fl">0.5</span>,</span>
-<span id="cb17-108"><a href="#cb17-108" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"Favours CA"</span>,</span>
-<span id="cb17-109"><a href="#cb17-109" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#0072B2"</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">4</span></span>
-<span id="cb17-110"><a href="#cb17-110" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb17-111"><a href="#cb17-111" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
-<span id="cb17-112"><a href="#cb17-112" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
-<span id="cb17-113"><a href="#cb17-113" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">1.3</span>, <span class="at">y =</span> <span class="fl">0.85</span>,</span>
-<span id="cb17-114"><a href="#cb17-114" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"Favours MT"</span>,</span>
-<span id="cb17-115"><a href="#cb17-115" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#D55E00"</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">4</span></span>
-<span id="cb17-116"><a href="#cb17-116" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb17-117"><a href="#cb17-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_cowplot</span>() <span class="sc">+</span></span>
-<span id="cb17-118"><a href="#cb17-118" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb17-119"><a href="#cb17-119" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">13</span>),</span>
-<span id="cb17-120"><a href="#cb17-120" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">colour =</span> <span class="st">"gray40"</span>),</span>
-<span id="cb17-121"><a href="#cb17-121" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
-<span id="cb17-122"><a href="#cb17-122" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb17-123"><a href="#cb17-123" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb17-124"><a href="#cb17-124" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="fu">alpha</span>(<span class="st">"lightgray"</span>, <span class="fl">0.3</span>))</span>
-<span id="cb17-125"><a href="#cb17-125" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb17-126"><a href="#cb17-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-127"><a href="#cb17-127" aria-hidden="true" tabindex="-1"></a>pdf_comparison <span class="sc">/</span> cdf_comparison <span class="sc">+</span></span>
-<span id="cb17-128"><a href="#cb17-128" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(</span>
-<span id="cb17-129"><a href="#cb17-129" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"CABANA Trial: Informative vs Non-informative Priors"</span>,</span>
-<span id="cb17-130"><a href="#cb17-130" aria-hidden="true" tabindex="-1"></a>    <span class="at">theme =</span> <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">15</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
-<span id="cb17-131"><a href="#cb17-131" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>n_samples_viz <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>comparison_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">log_or_inform  =</span> <span class="fu">rnorm</span>(n_samples_viz, post_mean, post_sd),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">log_or_noninfo =</span> <span class="fu">rnorm</span>(n_samples_viz, post_ni_mean, post_ni_sd)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">or_inform  =</span> <span class="fu">exp</span>(log_or_inform),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">or_noninfo =</span> <span class="fu">exp</span>(log_or_noninfo)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>pdf_comparison <span class="ot">&lt;-</span> comparison_data <span class="sc">|&gt;</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols      =</span> <span class="fu">c</span>(or_inform, or_noninfo),</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to  =</span> <span class="st">"prior_type"</span>,</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"or"</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior_type =</span> <span class="fu">factor</span>(</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>      prior_type,</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"or_noninfo"</span>, <span class="st">"or_inform"</span>),</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Non-informative Prior"</span>, <span class="st">"Informative Prior (Meta-analysis)"</span>)</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> or, <span class="at">fill =</span> prior_type, <span class="at">colour =</span> prior_type)) <span class="sc">+</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"gray50"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Non-informative Prior"</span> <span class="ot">=</span> <span class="st">"#E69F00"</span>,</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Informative Prior (Meta-analysis)"</span> <span class="ot">=</span> <span class="st">"#56B4E9"</span></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Non-informative Prior"</span> <span class="ot">=</span> <span class="st">"#E69F00"</span>,</span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Informative Prior (Meta-analysis)"</span> <span class="ot">=</span> <span class="st">"#56B4E9"</span></span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">1.5</span>)) <span class="sc">+</span></span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"CABANA Mortality: Prior Sensitivity"</span>,</span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">glue</span>(</span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Non-informative: OR = {round(exp(post_ni_mean), 2)} | "</span>,</span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Informative: OR = {round(exp(post_mean), 2)}"</span></span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Odds Ratio"</span>,</span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Posterior Density"</span>,</span>
+<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Analysis"</span>,</span>
+<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"Analysis"</span></span>
+<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
+<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">1.3</span>, <span class="at">y =</span> <span class="cn">Inf</span>, <span class="at">vjust =</span> <span class="dv">2</span>,</span>
+<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">glue</span>(</span>
+<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a>      <span class="st">"P(benefit | informative) = {round(prob_benefit_inf, 1)}%</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a>      <span class="st">"P(benefit | non-informative) = {round(prob_benefit_ni, 1)}%"</span></span>
+<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.5</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>, <span class="at">lineheight =</span> <span class="fl">0.9</span></span>
+<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_cowplot</span>() <span class="sc">+</span></span>
+<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">13</span>),</span>
+<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">colour =</span> <span class="st">"gray40"</span>),</span>
+<span id="cb16-65"><a href="#cb16-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb16-66"><a href="#cb16-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb16-67"><a href="#cb16-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>)</span>
+<span id="cb16-68"><a href="#cb16-68" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb16-69"><a href="#cb16-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-70"><a href="#cb16-70" aria-hidden="true" tabindex="-1"></a>cdf_comparison <span class="ot">&lt;-</span> comparison_data <span class="sc">|&gt;</span></span>
+<span id="cb16-71"><a href="#cb16-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb16-72"><a href="#cb16-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols      =</span> <span class="fu">c</span>(or_inform, or_noninfo),</span>
+<span id="cb16-73"><a href="#cb16-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to  =</span> <span class="st">"prior_type"</span>,</span>
+<span id="cb16-74"><a href="#cb16-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"or"</span></span>
+<span id="cb16-75"><a href="#cb16-75" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-76"><a href="#cb16-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb16-77"><a href="#cb16-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior_type =</span> <span class="fu">factor</span>(</span>
+<span id="cb16-78"><a href="#cb16-78" aria-hidden="true" tabindex="-1"></a>      prior_type,</span>
+<span id="cb16-79"><a href="#cb16-79" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"or_noninfo"</span>, <span class="st">"or_inform"</span>),</span>
+<span id="cb16-80"><a href="#cb16-80" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Non-informative"</span>, <span class="st">"Informative"</span>)</span>
+<span id="cb16-81"><a href="#cb16-81" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb16-82"><a href="#cb16-82" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-83"><a href="#cb16-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(prior_type) <span class="sc">|&gt;</span></span>
+<span id="cb16-84"><a href="#cb16-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(or, <span class="at">.by_group =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-85"><a href="#cb16-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cdf =</span> <span class="fu">row_number</span>() <span class="sc">/</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb16-86"><a href="#cb16-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-87"><a href="#cb16-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> or, <span class="at">y =</span> cdf, <span class="at">colour =</span> prior_type)) <span class="sc">+</span></span>
+<span id="cb16-88"><a href="#cb16-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb16-89"><a href="#cb16-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"gray50"</span>) <span class="sc">+</span></span>
+<span id="cb16-90"><a href="#cb16-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb16-91"><a href="#cb16-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Non-informative"</span> <span class="ot">=</span> <span class="st">"#E69F00"</span>, <span class="st">"Informative"</span> <span class="ot">=</span> <span class="st">"#56B4E9"</span>)</span>
+<span id="cb16-92"><a href="#cb16-92" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-93"><a href="#cb16-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb16-94"><a href="#cb16-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb16-95"><a href="#cb16-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> percent</span>
+<span id="cb16-96"><a href="#cb16-96" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-97"><a href="#cb16-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">1.5</span>)) <span class="sc">+</span></span>
+<span id="cb16-98"><a href="#cb16-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb16-99"><a href="#cb16-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Cumulative Distribution Functions"</span>,</span>
+<span id="cb16-100"><a href="#cb16-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Probability that OR is less than any given value"</span>,</span>
+<span id="cb16-101"><a href="#cb16-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Odds Ratio"</span>,</span>
+<span id="cb16-102"><a href="#cb16-102" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Cumulative Probability"</span>,</span>
+<span id="cb16-103"><a href="#cb16-103" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"Prior"</span></span>
+<span id="cb16-104"><a href="#cb16-104" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-105"><a href="#cb16-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb16-106"><a href="#cb16-106" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
+<span id="cb16-107"><a href="#cb16-107" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">0.7</span>, <span class="at">y =</span> <span class="fl">0.5</span>,</span>
+<span id="cb16-108"><a href="#cb16-108" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"Favours CA"</span>,</span>
+<span id="cb16-109"><a href="#cb16-109" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#0072B2"</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">4</span></span>
+<span id="cb16-110"><a href="#cb16-110" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-111"><a href="#cb16-111" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb16-112"><a href="#cb16-112" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
+<span id="cb16-113"><a href="#cb16-113" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">1.3</span>, <span class="at">y =</span> <span class="fl">0.85</span>,</span>
+<span id="cb16-114"><a href="#cb16-114" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"Favours MT"</span>,</span>
+<span id="cb16-115"><a href="#cb16-115" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#D55E00"</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">4</span></span>
+<span id="cb16-116"><a href="#cb16-116" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-117"><a href="#cb16-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_cowplot</span>() <span class="sc">+</span></span>
+<span id="cb16-118"><a href="#cb16-118" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb16-119"><a href="#cb16-119" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">13</span>),</span>
+<span id="cb16-120"><a href="#cb16-120" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">colour =</span> <span class="st">"gray40"</span>),</span>
+<span id="cb16-121"><a href="#cb16-121" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb16-122"><a href="#cb16-122" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb16-123"><a href="#cb16-123" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb16-124"><a href="#cb16-124" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="fu">alpha</span>(<span class="st">"lightgray"</span>, <span class="fl">0.3</span>))</span>
+<span id="cb16-125"><a href="#cb16-125" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb16-126"><a href="#cb16-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-127"><a href="#cb16-127" aria-hidden="true" tabindex="-1"></a>pdf_comparison <span class="sc">/</span> cdf_comparison <span class="sc">+</span></span>
+<span id="cb16-128"><a href="#cb16-128" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(</span>
+<span id="cb16-129"><a href="#cb16-129" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"CABANA Trial: Informative vs Non-informative Priors"</span>,</span>
+<span id="cb16-130"><a href="#cb16-130" aria-hidden="true" tabindex="-1"></a>    <span class="at">theme =</span> <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">15</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb16-131"><a href="#cb16-131" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1346,54 +1366,66 @@ group death survive
 </div>
 </div>
 </div>
+<div class="line-block"><br>
+</div>
+<p>The animation below hopefully gives us a better understanding of how each additional study’s posterior influences the following study’s prior in a stepwise fashion. | |</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="prior_posterior_evolution.gif" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="prior-sensitivity-for-τ-in-the-meta-analysis" class="level1">
-<h1>Prior sensitivity for τ in the meta-analysis</h1>
+<section id="prior-sensitivity-for-in-the-meta-analysis" class="level1">
+<h1>Prior sensitivity for in the meta-analysis</h1>
 <p>Finally, we examine how different priors on τ (heterogeneity) affect the pooled effect on mortality.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tau_priors <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Uniform(0, 0.5)"</span> <span class="ot">=</span> \(t) <span class="fu">dunif</span>(t, <span class="dv">0</span>, <span class="fl">0.5</span>),</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Uniform(0, 1)"</span>   <span class="ot">=</span> \(t) <span class="fu">dunif</span>(t, <span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Uniform(0, 2)"</span>   <span class="ot">=</span> \(t) <span class="fu">dunif</span>(t, <span class="dv">0</span>, <span class="dv">2</span>)</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>sensitivity_results <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="fu">names</span>(tau_priors), <span class="cf">function</span>(prior_name) {</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  bma_temp <span class="ot">&lt;-</span> <span class="fu">bayesmeta</span>(</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> y,</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma =</span> sigma,</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> labels,</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">tau.prior =</span> tau_priors[[prior_name]],</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu.prior.mean =</span> <span class="dv">0</span>,</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu.prior.sd =</span> <span class="dv">4</span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> bma_temp<span class="sc">$</span>summary</span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  mu_mean <span class="ot">&lt;-</span> s[<span class="st">"mean"</span>, <span class="st">"mu"</span>]</span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  mu_lower <span class="ot">&lt;-</span> s[<span class="st">"95% lower"</span>, <span class="st">"mu"</span>]</span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>  mu_upper <span class="ot">&lt;-</span> s[<span class="st">"95% upper"</span>, <span class="st">"mu"</span>]</span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>  tau_mean <span class="ot">&lt;-</span> s[<span class="st">"mean"</span>, <span class="st">"tau"</span>]</span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> prior_name,</span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu_mean =</span> mu_mean,</span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu_lower =</span> mu_lower,</span>
-<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu_upper =</span> mu_upper,</span>
-<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">tau_mean =</span> tau_mean,</span>
-<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">or_mean =</span> <span class="fu">exp</span>(mu_mean),</span>
-<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">or_lower =</span> <span class="fu">exp</span>(mu_lower),</span>
-<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">or_upper =</span> <span class="fu">exp</span>(mu_upper)</span>
-<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>sensitivity_results <span class="sc">|&gt;</span></span>
-<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"or_"</span>), \(x) <span class="fu">round</span>(x, <span class="dv">3</span>)),</span>
-<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">tau_mean =</span> <span class="fu">round</span>(tau_mean, <span class="dv">3</span>)</span>
-<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
-<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Sensitivity of pooled OR to different tau priors."</span></span>
-<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>tau_priors <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Uniform(0, 0.5)"</span> <span class="ot">=</span> \(t) <span class="fu">dunif</span>(t, <span class="dv">0</span>, <span class="fl">0.5</span>),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Uniform(0, 1)"</span>   <span class="ot">=</span> \(t) <span class="fu">dunif</span>(t, <span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Uniform(0, 2)"</span>   <span class="ot">=</span> \(t) <span class="fu">dunif</span>(t, <span class="dv">0</span>, <span class="dv">2</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>sensitivity_results <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="fu">names</span>(tau_priors), <span class="cf">function</span>(prior_name) {</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  bma_temp <span class="ot">&lt;-</span> <span class="fu">bayesmeta</span>(</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> y,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma =</span> sigma,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> labels,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">tau.prior =</span> tau_priors[[prior_name]],</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu.prior.mean =</span> <span class="dv">0</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu.prior.sd =</span> <span class="dv">4</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> bma_temp<span class="sc">$</span>summary</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  mu_mean <span class="ot">&lt;-</span> s[<span class="st">"mean"</span>, <span class="st">"mu"</span>]</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  mu_lower <span class="ot">&lt;-</span> s[<span class="st">"95% lower"</span>, <span class="st">"mu"</span>]</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  mu_upper <span class="ot">&lt;-</span> s[<span class="st">"95% upper"</span>, <span class="st">"mu"</span>]</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  tau_mean <span class="ot">&lt;-</span> s[<span class="st">"mean"</span>, <span class="st">"tau"</span>]</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">prior =</span> prior_name,</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu_mean =</span> mu_mean,</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu_lower =</span> mu_lower,</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu_upper =</span> mu_upper,</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">tau_mean =</span> tau_mean,</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">or_mean =</span> <span class="fu">exp</span>(mu_mean),</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">or_lower =</span> <span class="fu">exp</span>(mu_lower),</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">or_upper =</span> <span class="fu">exp</span>(mu_upper)</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>sensitivity_results <span class="sc">|&gt;</span></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"or_"</span>), \(x) <span class="fu">round</span>(x, <span class="dv">3</span>)),</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">tau_mean =</span> <span class="fu">round</span>(tau_mean, <span class="dv">3</span>)</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Sensitivity of pooled OR to different tau priors."</span></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Sensitivity of pooled OR to different tau priors.</caption>
@@ -1468,18 +1500,16 @@ group death survive
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Tip
+<span class="screen-reader-only">Tip</span>Probabilities are more intuitive than <em>p</em> values
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<blockquote class="blockquote">
-<p>“There is an 80–90% probability that CA reduces mortality”</p>
-</blockquote>
+<p><em>“There is an 80–90% probability that CA reduces mortality”</em></p>
 <p>is more clinically intuitive than</p>
-<blockquote class="blockquote">
-<p>“<em>p</em> = 0.30”</p>
-</blockquote>
+<p><em>“<em>p</em> = 0.30”</em></p>
 </div>
+</div>
+<div class="line-block"><br>
 </div>
 <ul>
 <li><p><strong>Priors can be informative but transparent</strong>: meta-analytic results from previous trials can be used as priors for new trials (as we did for CABANA).</p></li>
@@ -1490,8 +1520,23 @@ Tip
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-cabana_packer_2019" class="csl-entry" role="listitem">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Packer, D. L. <em>et al.</em> <a href="https://doi.org/10.1001/jama.2019.0693">Effect of catheter ablation vs antiarrhythmic drug therapy on mortality, stroke, bleeding, and cardiac arrest among patients with atrial fibrillation: The CABANA randomized clinical trial</a>. <em>JAMA</em> <strong>321</strong>, 1261 (2019).</div>
+</div>
 <div id="ref-Nogueira_et_al_2025" class="csl-entry" role="listitem">
-<div class="csl-left-margin">1. </div><div class="csl-right-inline">Nogueira, A. <em>et al.</em> <a href="https://doi.org/10.1111/jce.16552">A bayesian interpretation of CABANA and other randomized controlled trials for catheter ablation in patients with atrial fibrillation</a>. <em>Journal of Cardiovascular Electrophysiology</em> <strong>36</strong>, 617–624 (2025).</div>
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Nogueira, A. <em>et al.</em> <a href="https://doi.org/10.1111/jce.16552">A bayesian interpretation of CABANA and other randomized controlled trials for catheter ablation in patients with atrial fibrillation</a>. <em>Journal of Cardiovascular Electrophysiology</em> <strong>36</strong>, 617–624 (2025).</div>
+</div>
+<div id="ref-stabile_2006" class="csl-entry" role="listitem">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Stabile, G. <em>et al.</em> <a href="https://doi.org/10.1093/eurheartj/ehi583">Catheter ablation treatment in patients with drug-refractory atrial fibrillation: A prospective, multi-centre, randomized, controlled study (catheter ablation for the cure of atrial fibrillation study)†</a>. <em>European Heart Journal</em> <strong>27</strong>, 216–221 (2006).</div>
+</div>
+<div id="ref-a4_jais_2008" class="csl-entry" role="listitem">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Jaïs, P. <em>et al.</em> <a href="https://doi.org/10.1161/CIRCULATIONAHA.108.772582">Catheter ablation versus antiarrhythmic drugs for atrial fibrillation: The A4 study</a>. <em>Circulation</em> <strong>118</strong>, 2498–2505 (2008).</div>
+</div>
+<div id="ref-thermocool_af_2010" class="csl-entry" role="listitem">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline">Wilber, D. J. <em>et al.</em> <a href="https://doi.org/10.1001/jama.2009.2029">Comparison of antiarrhythmic drug therapy and radiofrequency catheter ablation in patients with paroxysmal atrial fibrillation: A randomized controlled trial</a>. <em>JAMA</em> <strong>303</strong>, 333 (2010).</div>
+</div>
+<div id="ref-mantra-af_2012" class="csl-entry" role="listitem">
+<div class="csl-left-margin">6. </div><div class="csl-right-inline">Cosedis Nielsen, J. <em>et al.</em> <a href="https://doi.org/10.1056/NEJMoa1113566">Radiofrequency ablation as initial therapy in paroxysmal atrial fibrillation</a>. <em>New England Journal of Medicine</em> <strong>367</strong>, 1587–1595 (2012).</div>
 </div>
 </div></section></div></main>
 <!-- /main column -->
